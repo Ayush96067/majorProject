@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 import connectDB from "./db/index.js";
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
+const app = express();
+
 // whenever communicate with database, always use try catch (database is always in another continent)
 
 // Method 1 : Db connection (using IFFI)
@@ -25,14 +29,12 @@ const app = express();
 })();
 */
 
-const app = express();
-
-app.get("/", (req, res) => {
-  res.send(`<h1>HELLo<h1>`);
-});
-
-connectDB();
-
-app.listen(process.env.PORT, () => {
-  console.log(`App listening at ${process.env.PORT}`);
-});
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+      console.log(`Server is running at port ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(`Mongo db connection failed !!! `, err);
+  });
