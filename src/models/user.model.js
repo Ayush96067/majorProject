@@ -60,7 +60,7 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   // if password modified than hash the modified password
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
 
   // always have to pass next to let the pre middleware know that its work is done and move further
   next();
