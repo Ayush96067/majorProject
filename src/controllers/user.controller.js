@@ -7,7 +7,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandler(async (req, res) => {
   // get the user from frontEnd(req.body)
   const { username, email, fullName, password } = req.body;
-  console.log(email);
+
   // validation - no empty field
   if (
     [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -16,7 +16,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // check if the user is already exist(username, email).
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
   if (existedUser)
@@ -24,7 +24,24 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // check for images , check for avatar
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path; // giver an error of undefined field if not provided
+
+  let coverImageLocalPath;
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage.length > 0
+  ) {
+    coverImageLocalPath = req.files.coverImage[0].path;
+  }
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage.length > 0
+  ) {
+    coverImageLocalPath = req.files.coverImage[0].path;
+  }
+
   if (!avatarLocalPath) throw new ApiError(400, "Avatar file is required");
 
   // upload them on cloudinary, avatar
