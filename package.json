@@ -19,6 +19,7 @@
     "prettier": "^3.3.3"
   },
   "dependencies": {
+    "lodash": "^4.17.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
